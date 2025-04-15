@@ -1,8 +1,17 @@
-# Nuxt Minimal Starter
+# Ark Avatar
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Generate Arknights style avatar online 😉
 
-## Setup
+[![Netlify Status](https://api.netlify.com/api/v1/badges/66f13cb2-9bad-48de-b2d6-e74e431ed8d4/deploy-status)](https://app.netlify.com/sites/ark-avatar/deploys)
+[![GitHub License](https://img.shields.io/github/license/cworld1/ark-avatar?style=flat)](https://github.com/cworld1/ark-avatar/blob/main/LICENSE)
+
+## Introduction
+
+Checkout [Demo Site →](https://ark-avatar.netlify.app/) to enjoy!
+
+![alt text](<.github/assets/2025-4-16 0-24-6.png>)
+
+## Local development
 
 Make sure to install dependencies:
 
@@ -73,3 +82,11 @@ bun run preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+## Contributions
+
+To spend more time coding and less time fiddling with whitespace, this project uses code conventions and styles to encourage consistency. Code with a consistent style is easier (and less error-prone!) to review, maintain, and understand.
+
+## License
+
+This project is licensed under the Apache 2.0 License.
