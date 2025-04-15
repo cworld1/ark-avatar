@@ -1,44 +1,38 @@
 <template>
   <UContainer class="py-6 space-y-8 max-w-4xl mx-auto">
-    <div class="text-center">
-      <h1 class="text-3xl font-bold">头像编辑器</h1>
+    <div class="flex flex-col items-center gap-y-2">
+      <h1 class="text-3xl font-bold">PRTS 头像编辑器</h1>
       <p class="text-gray-500">上传图片，裁剪、添加遮罩，并导出你的专属头像</p>
-    </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <!-- 图片上传与裁剪 -->
-      <UCard>
-        <template #header>图片上传与裁剪</template>
-        <div class="space-y-4">
-          <UButton as="label" variant="solid" color="primary" class="w-full">
-            上传图片
-            <input type="file" accept="image/*" class="hidden" @change="onFileChange" />
-          </UButton>
-
-          <vue-cropper ref="cropper" v-if="imageUrl" :src="imageUrl" :aspect-ratio="1" :drag-mode="'move'"
-            :autoCrop="true" :background="false" style="height: 400px" @crop="renderPreview" @ready="renderPreview"
-            @zoom="renderPreview" @cropmove="renderPreview" />
-        </div>
-      </UCard>
-
-      <!-- 遮罩和预览区 -->
-      <div class="space-y-6">
-        <MaskSelector v-model:mask="selectedMask" v-model:opacity="maskOpacity" v-model:scale="maskScale"
-          v-model:x="maskX" v-model:y="maskY" v-model:brightness="maskBrightness" /> <!-- 新增亮度 -->
-
-        <UCard>
-          <template #header>实时预览</template>
-          <div class="flex justify-center">
-            <canvas ref="previewCanvas" class="max-w-full border rounded bg-white shadow" />
-          </div>
-        </UCard>
+      <div class="flex gap-x-2">
+        <UButton as="label" variant="solid" color="primary">
+          上传图片
+          <input type="file" accept="image/*" class="hidden" @change="onFileChange" />
+        </UButton>
+        <UButton class="not-lg:hidden" color="primary" v-if="imageUrl" @click="saveImage">保存图片</UButton>
       </div>
     </div>
 
-    <div v-if="imageUrl" class="flex justify-end gap-4">
-      <UButton color="gray" variant="outline" @click="resetEditor">重置</UButton>
-      <UButton color="primary" @click="saveImage">保存图片</UButton>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      <!-- Mask Settings -->
+      <div class="space-y-6">
+        <MaskSelector :masks="masks" v-model:mask="selectedMask" v-model:opacity="maskOpacity" v-model:scale="maskScale"
+          v-model:x="maskX" v-model:y="maskY" v-model:brightness="maskBrightness" />
+      </div>
+
+      <UCard>
+        <template #header>裁剪 & 预览</template>
+        <div class="flex flex-col gap-y-4 lg:gap-y-6">
+          <vue-cropper ref="cropper" v-if="imageUrl" :src="imageUrl" :aspect-ratio="1" :drag-mode="'move'"
+            :autoCrop="true" :background="false" @crop="renderPreview" @ready="renderPreview" @zoom="renderPreview"
+            @cropmove="renderPreview" />
+          <canvas ref="previewCanvas"
+            class="max-w-full rounded-lg bg-black not-lg:fixed not-lg:bottom-4 not-lg:left-4 not-lg:right-4 not-lg:ring-2 not-lg:ring-gray-500 not-lg:max-h-50" />
+        </div>
+      </UCard>
     </div>
+
+    <UButton class="float-end lg:hidden" color="primary" v-if="imageUrl" @click="saveImage">保存图片</UButton>
   </UContainer>
 </template>
 
@@ -47,6 +41,11 @@ import { ref, watch, nextTick } from 'vue'
 import VueCropper from 'vue-cropperjs'
 import 'cropperjs/dist/cropper.css'
 import MaskSelector from './MaskSelector.vue'
+
+const masks = [
+  '/masks/mask1.png',
+  // ...
+]
 
 const imageUrl = ref<string | null>(null)
 const cropper = ref<any>(null)
@@ -137,19 +136,6 @@ function onFileChange(e: Event) {
     imageUrl.value = URL.createObjectURL(file)
   } else {
     alert('请上传有效的图片文件。')
-  }
-}
-
-function resetEditor() {
-  imageUrl.value = null
-  selectedMask.value = null
-  maskOpacity.value = 0.5
-  maskScale.value = 1
-  maskX.value = 0
-  maskY.value = 0
-  if (previewCanvas.value) {
-    const ctx = previewCanvas.value.getContext('2d')
-    ctx?.clearRect(0, 0, previewCanvas.value.width, previewCanvas.value.height)
   }
 }
 
